@@ -251,7 +251,12 @@ public class ViewRenderable extends Renderable {
     }
 
     if (!isInitialized) {
+      Texture.Sampler sampler = Texture.Sampler.builder()
+              .setMinFilter(Texture.Sampler.MinFilter.LINEAR)
+              .setWrapMode(Texture.Sampler.WrapMode.REPEAT)
+              .build();
       Texture.builder()
+              .setSampler(sampler)
               .setSource(textureBitmap)
               .setUsage(Texture.Usage.COLOR_MAP)
               .build()
