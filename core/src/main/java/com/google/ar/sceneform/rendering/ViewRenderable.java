@@ -262,10 +262,11 @@ public class ViewRenderable extends Renderable {
               .build()
               .thenAccept(texture -> {
                 getMaterial().setTexture(MaterialFactory.MATERIAL_TEXTURE, texture);
-                updateSuggestedCollisionShape();
-                isInitialized = true;
               });
     }
+
+    updateSuggestedCollisionShape();
+    isInitialized = true;
 
     if (renderer != null && renderer.isFrontFaceWindingInverted()) {
       getMaterial().setFloat2("offsetUv", 1, 0);

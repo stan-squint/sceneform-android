@@ -133,7 +133,7 @@ class RenderViewToExternalTexture extends LinearLayout {
 
       Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
       Canvas bitmapCanvas = new Canvas(bitmap);
-      picture.draw(bitmapCanvas);
+      view.draw(bitmapCanvas);
       this.textureBitmap = bitmap;
       
       hasDrawnToSurfaceTexture = true;
