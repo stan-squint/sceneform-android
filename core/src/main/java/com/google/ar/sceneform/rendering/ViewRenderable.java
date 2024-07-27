@@ -1,6 +1,7 @@
 package com.google.ar.sceneform.rendering;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Build;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -244,14 +245,20 @@ public class ViewRenderable extends Renderable {
     // Wait until one frame after the surface texture has been drawn to for the first time.
     // Fixes an issue where the ViewRenderable would render black for a frame before displaying.
     boolean hasDrawnToSurfaceTexture = renderViewToExternalTexture.hasDrawnToSurfaceTexture();
-    if (!hasDrawnToSurfaceTexture) {
+    Bitmap textureBitmap = renderViewToExternalTexture.getTextureBitmap();
+    if (!hasDrawnToSurfaceTexture || textureBitmap == null) {
       return;
     }
 
     if (!isInitialized) {
-      getMaterial()
-          .setExternalTexture("viewTexture", renderViewToExternalTexture.getExternalTexture());
-      updateSuggestedCollisionShape();
+      Texture.builder()
+              .setSource(textureBitmap)
+              .setUsage(Texture.Usage.COLOR_MAP)
+              .build()
+              .thenAccept(texture -> {
+                getMaterial().setTexture(MaterialFactory.MATERIAL_TEXTURE, texture);
+                updateSuggestedCollisionShape();
+              });
 
       isInitialized = true;
     }

@@ -1,6 +1,7 @@
 package com.google.ar.sceneform.rendering;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Picture;
@@ -40,6 +41,7 @@ class RenderViewToExternalTexture extends LinearLayout {
 
   private final View view;
   private final ExternalTexture externalTexture;
+  @Nullable private Bitmap textureBitmap;
   private final Picture picture = new Picture();
   private boolean hasDrawnToSurfaceTexture = false;
 
@@ -79,6 +81,10 @@ class RenderViewToExternalTexture extends LinearLayout {
 
   ExternalTexture getExternalTexture() {
     return externalTexture;
+  }
+
+  @Nullable Bitmap getTextureBitmap() {
+    return textureBitmap;
   }
 
   public boolean isViewTextureReady() {
@@ -125,6 +131,11 @@ class RenderViewToExternalTexture extends LinearLayout {
       picture.draw(surfaceCanvas);
       targetSurface.unlockCanvasAndPost(surfaceCanvas);
 
+      Bitmap bitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(), Bitmap.Config.ARGB_8888);
+      Canvas bitmapCanvas = new Canvas(bitmap);
+      picture.draw(bitmapCanvas);
+      this.textureBitmap = bitmap;
+      
       hasDrawnToSurfaceTexture = true;
     }
 
